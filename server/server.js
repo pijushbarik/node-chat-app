@@ -24,7 +24,7 @@ io.on('connection', socket => {
     from: 'admin',
     text: 'a new user connected',
     joinedAt: new Date().getTime()
-  });
+  }); 
 
   socket.on('createMessage', message => {
     message.createdAt = Date.now();
