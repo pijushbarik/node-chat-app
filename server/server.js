@@ -1,7 +1,7 @@
 const path = require('path');
 const express = require('express');
 
-const { generateMessage } = require('./utils/message');
+const { generateMessage, generateLocationMessage } = require('./utils/message');
 
 const port = process.env.PORT || 3000;
 
@@ -23,6 +23,10 @@ io.on('connection', socket => {
   socket.on('createMessage', (message, cb) => {
     io.emit('newMessage', generateMessage(message.from, message.text));
     cb('this is from server');
+  });
+
+  socket.on('createLocationMessage', data => {
+    io.emit('newLocationMessage', generateLocationMessage(data.from, data.coords));
   });
 
   socket.on('disconnect', () => {
