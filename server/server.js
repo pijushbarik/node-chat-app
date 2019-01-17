@@ -20,8 +20,9 @@ io.on('connection', socket => {
 
   socket.broadcast.emit('newUser', generateMessage('admin', 'a new user joined')); 
 
-  socket.on('createMessage', message => {
+  socket.on('createMessage', (message, cb) => {
     io.emit('newMessage', generateMessage(message.from, message.text));
+    cb('this is from server');
   });
 
   socket.on('disconnect', () => {
@@ -29,4 +30,6 @@ io.on('connection', socket => {
   });
 });
 
-server.listen(port);
+server.listen(port, () => {
+  console.log(`server is running on port ${port}...`);
+});
