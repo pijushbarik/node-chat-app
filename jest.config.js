@@ -1,4 +1,4 @@
 module.exports = {
   "testEnvironment": "node",
-  "testRegex": "server/.*.test.js$"
+  "testRegex": "__tests__/.*.test.js$"
 };
