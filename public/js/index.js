@@ -4,27 +4,27 @@ socket.on('connect', function ()  {
   socket.on('newMessage', function (message) {
     var formattedTime = moment().format('h:mm a');
 
-    var li = $('<li></li>');
-    li.text(`${message.from} ${formattedTime}: ${message.text}`);
-    $('#messages').append(li);
-  });
+    var template = $('#message-template').html();
+    var html = Mustache.render(template, {
+      text: message.text,
+      from: message.from,
+      createdAt: formattedTime
+    });
 
-  socket.on('newUser', function (message) {
-    var newUser = $('<h4></h4>');
-    newUser.text(message.text);
-    $('#messages').append(newUser);
+    $('#messages').append(html);
   });
 
   socket.on('newLocationMessage', function (message) {
     var formattedTime = moment().format('h:mm a');
 
-    var li = $('<li></li>');
-    var a = $('<a target="_blank">My current location</a>');
-    li.text(`${message.from} ${formattedTime}: `);
-    a.attr('href', message.url);
-    li.append(a);
+    var template = $('#location-message-template').html();
+    var html = Mustache.render(template, {
+      from: message.from,
+      createdAt: formattedTime,
+      url: message.url
+    });
 
-    $('#messages').append(li);
+    $('#messages').append(html);
   });
 });
 
@@ -38,6 +38,7 @@ $('#message-form').on('submit', function (e) {
     text: msgBox.val()
   }, function () {
     msgBox.val('');
+    msgBox.focus();
   });
 });
 

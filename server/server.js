@@ -16,7 +16,7 @@ const io = require('socket.io')(server);
 io.on('connection', socket => {
   console.log('new user connected');
 
-  socket.emit('newUser', generateMessage('admin', 'welcome to the chat app'));
+  socket.emit('newMessage', generateMessage('admin', 'welcome to the chat app'));
 
   socket.broadcast.emit('newUser', generateMessage('admin', 'a new user joined')); 
 
