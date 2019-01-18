@@ -16,8 +16,6 @@ const io = require('socket.io')(server);
 const users = new Users();
 
 io.on('connection', socket => {
-  console.log('new user connected'); 
-
   socket.on('join', (params, cb) => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return cb('name and room name are required');
@@ -37,12 +35,21 @@ io.on('connection', socket => {
   });
 
   socket.on('createMessage', (message, cb) => {
-    io.emit('newMessage', generateMessage(message.from, message.text));
+    var user = users.getUser(socket.id);
+
+    if (user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+    }
+
     cb('this is from server');
   });
 
   socket.on('createLocationMessage', data => {
-    io.emit('newLocationMessage', generateLocationMessage(data.from, data.coords));
+    var user = users.getUser(socket.id);
+    
+    if (user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, data.coords));
+    }
   });
 
   socket.on('disconnect', () => {
