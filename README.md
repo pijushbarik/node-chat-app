@@ -6,6 +6,18 @@ npm install
 ```
 ---
 
+#### Build bundles (production)
+```javascript
+npm run build
+```
+---
+
+#### Build bundles (dev)
+```javascript
+npm run build:dev
+```
+---
+
 #### Start server
 ```javascript
 npm start
