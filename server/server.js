@@ -5,15 +5,25 @@ const { generateMessage, generateLocationMessage } = require('./utils/message');
 const { isRealString } = require('./utils/validation');
 const { Users } = require('./utils/users');
 
+const srcPath = path.resolve('src');
+
 const port = process.env.PORT || 3000;
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.resolve('public')));
 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 const users = new Users();
+
+app.get('/', (req, res) => {
+  res.sendFile(srcPath + '/index.html');
+});
+
+app.get('/chat', (req, res) => {
+  res.sendFile(srcPath + '/chat.html');
+});
 
 io.on('connection', socket => {
   socket.on('join', (params, cb) => {
