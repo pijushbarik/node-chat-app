@@ -1,6 +1,27 @@
+import './../scss/style.scss'
+
+const io = require('socket.io-client');
+const $ = require('jquery');
+const moment = require('moment');
+const Mustache = require('mustache');
+
+const deparam = uri => {
+  if (uri === undefined) {
+    uri = window.location.search;
+  }
+
+  var queryString = {};
+
+  uri.replace(/[?&]+([^=&]+)=([^&]*)/gi, (m, key, value) => {
+    queryString[key] = value;
+  });
+
+  return queryString;
+};
+
 var socket = io();
 
-function scrollToBottom () {
+const scrollToBottom = () => {
   // selectors
   var messages = $('#messages');
   var newMessage = messages.children('li:last-child');
@@ -16,22 +37,20 @@ function scrollToBottom () {
   if ((clientHeight + scrollTop + newMessageHeight + lastMessageHeight) >= scrollHeight) {
     messages.scrollTop(scrollHeight);
   }
-}
+};
 
-socket.on('connect', function ()  {
-  var params = $.deparam(window.location.search);
+socket.on('connect', () => {
+  var params = deparam(window.location.search);
   
-  socket.emit('join', params, function (err) {
+  socket.emit('join', params, (err) => {
     if (err) {
       alert(err);
       window.location.href = '/';
-    } else {
-      console.log('perfect');
     }
   });
 });
 
-socket.on('updateUsersList', function (users) {
+socket.on('updateUsersList', (users) => {
   var ol = $('<ol></ol>');
 
   users.forEach(user => {
@@ -41,9 +60,8 @@ socket.on('updateUsersList', function (users) {
   $('#users').html(ol);
 });
 
-socket.on('newMessage', function (message) {
+socket.on('newMessage', (message) => {
   var formattedTime = moment().format('h:mm a');
-  console.log(message);
 
   var template = $('#message-template').html();
   var html = Mustache.render(template, {
@@ -57,7 +75,7 @@ socket.on('newMessage', function (message) {
   scrollToBottom();
 });
 
-socket.on('newLocationMessage', function (message) {
+socket.on('newLocationMessage', (message) => {
   var formattedTime = moment().format('h:mm a');
 
   var template = $('#location-message-template').html();
@@ -72,7 +90,7 @@ socket.on('newLocationMessage', function (message) {
   scrollToBottom();
 });
 
-$('#message-form').on('submit', function (e) {
+$('#message-form').on('submit', (e) => {
   e.preventDefault();
 
   var msgBox = $('#new-message');
@@ -80,7 +98,7 @@ $('#message-form').on('submit', function (e) {
   socket.emit('createMessage', {
     from: 'user',
     text: msgBox.val()
-  }, function () {
+  }, () => {
     msgBox.val('');
     msgBox.focus();
   });
@@ -88,12 +106,12 @@ $('#message-form').on('submit', function (e) {
 
 var locationBtn = $('#location');
 
-locationBtn.on('click', function (e) {
+locationBtn.on('click', (e) => {
   if (!navigator.geolocation) return alert('geolocation not supported by your browser');
 
   locationBtn.attr('disabled', 'disabled').text('Sending...');
 
-  navigator.geolocation.getCurrentPosition(function (position) {
+  navigator.geolocation.getCurrentPosition((position) => {
     locationBtn.removeAttr('disabled').text('Send location');
 
     socket.emit('createLocationMessage', {
@@ -103,7 +121,7 @@ locationBtn.on('click', function (e) {
         longitude: position.coords.longitude
       }
     });
-  }, function () {
+  }, () => {
     alert('unable to fetch location');
 
     locationBtn.removeAttr('disabled').text('Send location');

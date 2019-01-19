@@ -2,8 +2,8 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Node Chat App</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Chat | ChatApp</title>
+    <link rel="stylesheet" href="assets/bundles/style.css">
   </head>
   <body class="chat">
     <div class="chat__sidebar">
@@ -18,7 +18,7 @@
             <form id="message-form">
               <input type="text" name="message" placeholder="Type a message" id="new-message" autofocus autocomplete="off">
               <button>Send</button>
-            </form><br>
+            </form>
     
             <button id="location">Send location</button>
         </div>
@@ -48,11 +48,6 @@
       </li>
     </script>
 
-    <script type="text/javascript" src="socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="js/libs/jquery-3.3.1.min.js"></script>
-    <script type="text/javascript" src="js/libs/moment.js"></script>
-    <script type="text/javascript" src="js/libs/mustache.js"></script>
-    <script type="text/javascript" src="js/libs/deparam.js"></script>
-    <script type="text/javascript" src="js/chat.js"></script>
+    <script type="text/javascript" src="assets/bundles/chat.bundle.js"></script>
   </body>
 </html>
